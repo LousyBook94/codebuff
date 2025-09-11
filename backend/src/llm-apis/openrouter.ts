@@ -1,4 +1,5 @@
 import { models } from '@codebuff/common/old-constants'
+import { getModelForAgent } from '@codebuff/common/util/get-model'
 import { isExplicitlyDefinedModel } from '@codebuff/common/util/model-utils'
 import { env } from '@codebuff/internal/env'
 import { createOpenRouter } from '@codebuff/internal/openrouter-ai-sdk'
@@ -15,7 +16,24 @@ const providerOrder = {
   [models.openrouter_claude_opus_4]: ['Google', 'Anthropic'],
 } as const
 
-export function openRouterLanguageModel(model: Model) {
+export function openRouterLanguageModel(model: Model, agentId?: string) {
+  if (!env.CB_DEFAULT) {
+    if (!env.CB_KEY) {
+      throw new Error('CB_KEY is required when CB_DEFAULT is false')
+    }
+    const newModel = getModelForAgent(agentId)
+    return createOpenRouter({
+      apiKey: env.CB_KEY,
+      baseURL: env.CB_BASE_URL,
+      headers: {
+        'HTTP-Referer': 'https://codebuff.com',
+        'X-Title': 'Codebuff',
+      },
+    }).languageModel(newModel as Model, {
+      usage: { include: true },
+      logprobs: true,
+    })
+  }
   const extraBody: Record<string, any> = {
     transforms: ['middle-out'],
   }

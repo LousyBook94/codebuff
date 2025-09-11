@@ -37,7 +37,7 @@ import type { LanguageModel } from 'ai'
 import type { z } from 'zod/v4'
 
 // TODO: We'll want to add all our models here!
-const modelToAiSDKModel = (model: Model): LanguageModel => {
+const modelToAiSDKModel = (model: Model, agentId?: string): LanguageModel => {
   if (
     Object.values(finetunedVertexModels as Record<string, string>).includes(
       model,
@@ -55,7 +55,7 @@ const modelToAiSDKModel = (model: Model): LanguageModel => {
     return openai.languageModel(model)
   }
   // All other models go through OpenRouter
-  return openRouterLanguageModel(model)
+  return openRouterLanguageModel(model, agentId)
 }
 
 // TODO: Add retries & fallbacks: likely by allowing this to instead of "model"
@@ -98,7 +98,7 @@ export const promptAiSdkStream = async function* (
   }
   const startTime = Date.now()
 
-  let aiSDKModel = modelToAiSDKModel(options.model)
+  let aiSDKModel = modelToAiSDKModel(options.model, options.agentId)
 
   const response = streamText({
     ...options,
@@ -260,7 +260,7 @@ export const promptAiSdk = async function (
   }
 
   const startTime = Date.now()
-  let aiSDKModel = modelToAiSDKModel(options.model)
+  let aiSDKModel = modelToAiSDKModel(options.model, options.agentId)
 
   const response = await generateText({
     ...options,
@@ -332,7 +332,7 @@ export const promptAiSdkStructured = async function <T>(options: {
     return {} as T
   }
   const startTime = Date.now()
-  let aiSDKModel = modelToAiSDKModel(options.model)
+  let aiSDKModel = modelToAiSDKModel(options.model, options.agentId)
 
   const responsePromise = generateObject<z.ZodType<T>, 'object'>({
     ...options,

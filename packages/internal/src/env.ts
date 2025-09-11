@@ -40,6 +40,14 @@ const envSchema = {
 
     // Common variables
     API_KEY_ENCRYPTION_SECRET: z.string().length(32),
+    CB_KEY: z.string().optional(),
+    CB_BASE_URL: z.string().optional(),
+    CB_MODEL: z.string().optional(),
+    CB_DEFAULT: z
+      .string()
+      .optional()
+      .default('false')
+      .transform((v) => v === 'true'),
   },
   client: {
     NEXT_PUBLIC_CB_ENVIRONMENT: z.string().min(1),
@@ -87,6 +95,10 @@ const envSchema = {
 
     // Common variables
     API_KEY_ENCRYPTION_SECRET: process.env.API_KEY_ENCRYPTION_SECRET,
+    CB_KEY: process.env.CB_KEY,
+    CB_BASE_URL: process.env.CB_BASE_URL,
+    CB_MODEL: process.env.CB_MODEL,
+    CB_DEFAULT: process.env.CB_DEFAULT,
 
     // Client variables
     NEXT_PUBLIC_CB_ENVIRONMENT: process.env.NEXT_PUBLIC_CB_ENVIRONMENT,
