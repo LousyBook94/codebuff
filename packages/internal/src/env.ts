@@ -43,7 +43,7 @@ const envSchema = {
     CB_KEY: z.string().optional(),
     CB_BASE_URL: z.string().optional(),
     CB_MODEL: z.string().optional(),
-    CB_DEFAULT: z
+    CB_ENABLE_CUSTOM_MODELS: z
       .string()
       .optional()
       .default('false')
@@ -98,7 +98,7 @@ const envSchema = {
     CB_KEY: process.env.CB_KEY,
     CB_BASE_URL: process.env.CB_BASE_URL,
     CB_MODEL: process.env.CB_MODEL,
-    CB_DEFAULT: process.env.CB_DEFAULT,
+    CB_ENABLE_CUSTOM_MODELS: process.env.CB_ENABLE_CUSTOM_MODELS,
 
     // Client variables
     NEXT_PUBLIC_CB_ENVIRONMENT: process.env.NEXT_PUBLIC_CB_ENVIRONMENT,

@@ -16,10 +16,17 @@ const providerOrder = {
   [models.openrouter_claude_opus_4]: ['Google', 'Anthropic'],
 } as const
 
-export function openRouterLanguageModel(model: Model, agentId?: string) {
-  if (!env.CB_DEFAULT) {
+export function openRouterLanguageModel(
+  model: Model,
+  agentId?: string,
+  logprobs?: boolean,
+) {
+  if (env.CB_ENABLE_CUSTOM_MODELS) {
     if (!env.CB_KEY) {
-      throw new Error('CB_KEY is required when CB_DEFAULT is false')
+      throw new Error('CB_KEY is required when custom models are enabled')
+    }
+    if (!env.CB_BASE_URL) {
+      throw new Error('CB_BASE_URL is required when custom models are enabled')
     }
     const newModel = getModelForAgent(agentId)
     return createOpenRouter({
@@ -31,7 +38,7 @@ export function openRouterLanguageModel(model: Model, agentId?: string) {
       },
     }).languageModel(newModel as Model, {
       usage: { include: true },
-      logprobs: true,
+      ...(typeof logprobs !== 'undefined' ? { logprobs } : {}),
     })
   }
   const extraBody: Record<string, any> = {
@@ -55,6 +62,6 @@ export function openRouterLanguageModel(model: Model, agentId?: string) {
     extraBody,
   }).languageModel(model, {
     usage: { include: true },
-    logprobs: true,
+    ...(typeof logprobs !== 'undefined' ? { logprobs } : {}),
   })
 }

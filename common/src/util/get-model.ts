@@ -21,7 +21,10 @@ export function getModelForAgent(agentId?: string): string {
     return DEFAULT_MODEL
   }
 
-  const models = modelStr.split(';')
+  const models = modelStr.split(';').filter(Boolean)
+  if (models.length === 0) {
+    return DEFAULT_MODEL
+  }
   const defaultModel = models[0]
 
   if (!agentId) {

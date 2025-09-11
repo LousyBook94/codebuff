@@ -140,7 +140,7 @@ Codebuff can be configured using environment variables.
 - `CB_MODEL`: A semicolon-separated list of models to use. The models are assigned to agents based on a fixed order. If there are more agents than models, the first model in the list is used as a fallback.
   - **Agent Order**: `base`, `ask`, `thinker`, `file-explorer`, `file-picker`, `researcher`, `planner`, `reviewer`, `agent-builder`.
   - **Example**: If `CB_MODEL` is `claude-2;gpt-4`, then the `base` agent will use `claude-2`, the `ask` agent will use `gpt-4`, and all other agents will use `claude-2`.
-- `CB_DEFAULT`: A boolean flag to control which model selection logic is used. If `true`, the default logic is used. If `false` (the default), the new logic with `CB_KEY`, `CB_BASE_URL`, and `CB_MODEL` is used.
+- `CB_ENABLE_CUSTOM_MODELS`: A boolean flag to enable the custom model configuration. Defaults to `false`. If set to `true`, the custom model logic with `CB_KEY`, `CB_BASE_URL`, and `CB_MODEL` is used. Otherwise, the default logic is used.
 
 ## Why choose Codebuff
 
