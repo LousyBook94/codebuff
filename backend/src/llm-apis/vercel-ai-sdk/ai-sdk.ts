@@ -37,7 +37,11 @@ import type { LanguageModel } from 'ai'
 import type { z } from 'zod/v4'
 
 // TODO: We'll want to add all our models here!
-const modelToAiSDKModel = (model: Model): LanguageModel => {
+const modelToAiSDKModel = (
+  model: Model,
+  agentId?: string,
+  logprobs?: boolean,
+): LanguageModel => {
   if (
     Object.values(finetunedVertexModels as Record<string, string>).includes(
       model,
@@ -55,7 +59,7 @@ const modelToAiSDKModel = (model: Model): LanguageModel => {
     return openai.languageModel(model)
   }
   // All other models go through OpenRouter
-  return openRouterLanguageModel(model)
+  return openRouterLanguageModel(model, agentId, logprobs)
 }
 
 // TODO: Add retries & fallbacks: likely by allowing this to instead of "model"
@@ -76,6 +80,7 @@ export const promptAiSdkStream = async function* (
     onCostCalculated?: (credits: number) => Promise<void>
     includeCacheControl?: boolean
     resolveMessageId?: (messageId: string) => unknown
+    logprobs?: boolean
   } & Omit<Parameters<typeof streamText>[0], 'model' | 'messages'>,
 ) {
   if (
@@ -98,7 +103,11 @@ export const promptAiSdkStream = async function* (
   }
   const startTime = Date.now()
 
-  let aiSDKModel = modelToAiSDKModel(options.model)
+  let aiSDKModel = modelToAiSDKModel(
+    options.model,
+    options.agentId,
+    options.logprobs,
+  )
 
   const response = streamText({
     ...options,
@@ -239,6 +248,7 @@ export const promptAiSdk = async function (
     agentId?: string
     onCostCalculated?: (credits: number) => Promise<void>
     includeCacheControl?: boolean
+    logprobs?: boolean
   } & Omit<Parameters<typeof generateText>[0], 'model' | 'messages'>,
 ): Promise<string> {
   if (
@@ -260,7 +270,11 @@ export const promptAiSdk = async function (
   }
 
   const startTime = Date.now()
-  let aiSDKModel = modelToAiSDKModel(options.model)
+  let aiSDKModel = modelToAiSDKModel(
+    options.model,
+    options.agentId,
+    options.logprobs,
+  )
 
   const response = await generateText({
     ...options,
@@ -313,6 +327,7 @@ export const promptAiSdkStructured = async function <T>(options: {
   agentId?: string
   onCostCalculated?: (credits: number) => Promise<void>
   includeCacheControl?: boolean
+  logprobs?: boolean
 }): Promise<T> {
   if (
     !checkLiveUserInput(
@@ -332,7 +347,11 @@ export const promptAiSdkStructured = async function <T>(options: {
     return {} as T
   }
   const startTime = Date.now()
-  let aiSDKModel = modelToAiSDKModel(options.model)
+  let aiSDKModel = modelToAiSDKModel(
+    options.model,
+    options.agentId,
+    options.logprobs,
+  )
 
   const responsePromise = generateObject<z.ZodType<T>, 'object'>({
     ...options,

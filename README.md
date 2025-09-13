@@ -131,6 +131,17 @@ await client.run({
 
 Learn more about the SDK [here](https://www.npmjs.com/package/@codebuff/sdk).
 
+## Configuration
+
+Codebuff can be configured using environment variables.
+
+- `CB_KEY`: Your API key.
+- `CB_BASE_URL`: The base URL for the API. It should not include any specific paths like `/chat/completions`. For example: `https://api.example.com/v1`.
+- `CB_MODEL`: A semicolon-separated list of models to use. The models are assigned to agents based on a fixed order. If there are more agents than models, the first model in the list is used as a fallback.
+  - **Agent Order**: `base`, `ask`, `thinker`, `file-explorer`, `file-picker`, `researcher`, `planner`, `reviewer`, `agent-builder`.
+  - **Example**: If `CB_MODEL` is `claude-2;gpt-4`, then the `base` agent will use `claude-2`, the `ask` agent will use `gpt-4`, and all other agents will use `claude-2`.
+- `CB_ENABLE_CUSTOM_MODELS`: A boolean flag to enable the custom model configuration. Defaults to `false`. If set to `true`, the custom model logic with `CB_KEY`, `CB_BASE_URL`, and `CB_MODEL` is used. Otherwise, the default logic is used.
+
 ## Why choose Codebuff
 
 **Deep customizability**: Create sophisticated agent workflows with TypeScript generators that mix AI generation with programmatic control. Define custom agents that spawn subagents, implement conditional logic, and orchestrate complex multi-step processes that adapt to your specific use cases.
@@ -148,6 +159,44 @@ Learn more about the SDK [here](https://www.npmjs.com/package/@codebuff/sdk).
 **CLI**: `npm install -g codebuff`
 
 **SDK**: `npm install @codebuff/sdk`
+
+### Building from Source
+
+If you want to build and run Codebuff from the source code, follow these steps:
+
+1.  **Install dependencies**:
+    ```bash
+    bun install
+    ```
+
+2.  **Build the executable**:
+    ```bash
+    bun --cwd npm-app run build
+    ```
+    This will create a standalone executable in the `npm-app/bin` directory.
+
+3.  **Add to PATH (Optional)**:
+    To run the `codebuff` command from anywhere, add the `npm-app/bin` directory to your system's PATH.
+
+    -   **Windows (Command Prompt)**:
+        ```cmd
+        setx PATH "%PATH%;C:\path\to\your\project\npm-app\bin"
+        ```
+        *Note: You need to replace `C:\path\to\your\project` with the absolute path to the project directory.*
+
+    -   **Windows (PowerShell)**:
+        ```powershell
+        $newPath = $env:PATH + ";C:\path\to\your\project\npm-app\bin"
+        [System.Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
+        ```
+        *Note: You need to replace `C:\path\to\your\project` with the absolute path to the project directory. Restart your terminal for the changes to take effect.*
+
+    -   **macOS & Linux**:
+        ```bash
+        echo 'export PATH="$PATH:/path/to/your/project/npm-app/bin"' >> ~/.zshrc
+        source ~/.zshrc
+        ```
+        *Note: You need to replace `/path/to/your/project` with the absolute path to the project directory. If you are using Bash, replace `~/.zshrc` with `~/.bashrc`.*
 
 ### Resources
 
