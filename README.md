@@ -27,12 +27,6 @@ This multi-agent approach gives you better context understanding, more accurate 
 
 ## CLI: Install and start coding
 
-Install:
-
-```bash
-npm install -g codebuff
-```
-
 Run:
 
 ```bash
@@ -169,8 +163,6 @@ Some ways you can help:
 ## Get started
 
 ### Install
-
-**CLI**: `npm install -g codebuff`
 
 **SDK**: `npm install @codebuff/sdk`
 
