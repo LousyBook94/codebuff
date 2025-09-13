@@ -96,7 +96,7 @@ async function main() {
 
   const targetInfo = getTargetInfo()
   const outputName =
-    currentPlatform === 'win32' ? `${packageName}.exe` : packageName
+    targetInfo.platform === 'win32' ? `${packageName}.exe` : packageName
 
   await buildTarget(targetInfo.bunTarget, outputName, targetInfo)
 }
