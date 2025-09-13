@@ -42,6 +42,28 @@ Then just tell Codebuff what you want and it handles the rest:
 
 Codebuff will find the right files, makes changes across your codebase, and runs tests to make sure nothing breaks.
 
+## Download and Run (Windows)
+
+1.  **[Download the latest release](https://github.com/CodebuffAI/codebuff/releases/latest/download/windows-x64.zip)** of the Windows executable (`windows-x64.zip`).
+
+2.  **Extract the `.zip` file** to a location on your computer. This will give you a `codebuff.exe` file.
+
+3.  **Add to PATH (Optional)**:
+    To run the `codebuff` command from any terminal, add the directory where you extracted `codebuff.exe` to your system's PATH.
+
+    -   **Command Prompt**:
+        ```cmd
+        setx PATH "%PATH%;C:\path\to\your\extracted\folder"
+        ```
+        *Note: Replace `C:\path\to\your\extracted\folder` with the actual path to the folder containing `codebuff.exe`.*
+
+    -   **PowerShell**:
+        ```powershell
+        $newPath = $env:PATH + ";C:\path\to\your\extracted\folder"
+        [System.Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
+        ```
+        *Note: Replace `C:\path\to\your\extracted\folder` with the actual path to the folder containing `codebuff.exe`. You may need to restart your terminal for the changes to take effect.*
+
 ## Create custom agents
 
 To get started building your own agents, run:
