@@ -172,7 +172,7 @@ var CODEBUFF_WASM_BINARY = null;
       return false
     }
   } catch (error) {
-    console.error(`❌ Failed to patch ${webTreeSitterPath}:`, error.message)
+    console.error(`❌ Failed to patch ${webTreeSitterPath}:`, (error as Error).message)
     return false
   }
 }

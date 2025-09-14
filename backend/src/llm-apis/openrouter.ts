@@ -1,4 +1,5 @@
 import { models } from '@codebuff/common/old-constants'
+import { getModelForAgent } from '@codebuff/common/util/get-model'
 import { isExplicitlyDefinedModel } from '@codebuff/common/util/model-utils'
 import { env } from '@codebuff/internal/env'
 import { createOpenRouter } from '@codebuff/internal/openrouter-ai-sdk'
@@ -15,7 +16,31 @@ const providerOrder = {
   [models.openrouter_claude_opus_4]: ['Google', 'Anthropic'],
 } as const
 
-export function openRouterLanguageModel(model: Model) {
+export function openRouterLanguageModel(
+  model: Model,
+  agentId?: string,
+  logprobs?: boolean,
+) {
+  if (env.CB_ENABLE_CUSTOM_MODELS) {
+    if (!env.CB_KEY) {
+      throw new Error('CB_KEY is required when custom models are enabled')
+    }
+    if (!env.CB_BASE_URL) {
+      throw new Error('CB_BASE_URL is required when custom models are enabled')
+    }
+    const newModel = getModelForAgent(agentId)
+    return createOpenRouter({
+      apiKey: env.CB_KEY,
+      baseURL: env.CB_BASE_URL,
+      headers: {
+        'HTTP-Referer': 'https://codebuff.com',
+        'X-Title': 'Codebuff',
+      },
+    }).languageModel(newModel as Model, {
+      usage: { include: true },
+      ...(typeof logprobs !== 'undefined' ? { logprobs } : {}),
+    })
+  }
   const extraBody: Record<string, any> = {
     transforms: ['middle-out'],
   }
@@ -37,6 +62,6 @@ export function openRouterLanguageModel(model: Model) {
     extraBody,
   }).languageModel(model, {
     usage: { include: true },
-    logprobs: true,
+    ...(typeof logprobs !== 'undefined' ? { logprobs } : {}),
   })
 }

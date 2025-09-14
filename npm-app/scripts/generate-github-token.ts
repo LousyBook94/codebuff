@@ -8,19 +8,18 @@ const APP_ID: string | undefined = process.env.GH_APP_ID
 const PRIVATE_KEY_CONTENT: string | undefined = process.env.GH_APP_PRIVATE_KEY
 const INSTALLATION_ID: string | undefined = process.env.GH_APP_INSTALLATION_ID
 
-function error(message) {
+function error(message: string): never {
   console.error(`❌ ${message}`)
   process.exit(1)
 }
 
-function base64urlEscape(str) {
+function base64urlEscape(str: string) {
   return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '')
 }
 
-function generateJWT() {
+function generateJWT(): string {
   if (!APP_ID || !PRIVATE_KEY_CONTENT) {
     error('GH_APP_ID and GH_APP_PRIVATE_KEY environment variables are required')
-    return
   }
 
   // Write private key content to temporary file
@@ -84,11 +83,11 @@ function generateJWT() {
     try {
       fs.unlinkSync(tempKeyFile)
     } catch {}
-    error(`Failed to sign JWT: ${err.message}`)
+    error(`Failed to sign JWT: ${(err as Error).message}`)
   }
 }
 
-function getInstallationToken(jwt) {
+function getInstallationToken(jwt: string): string {
   if (!INSTALLATION_ID) {
     error('GH_APP_INSTALLATION_ID environment variable is required')
   }
@@ -125,7 +124,7 @@ function getInstallationToken(jwt) {
       error(`Failed to get installation token: ${response}`)
     }
   } catch (err) {
-    error(`Failed to get installation token: ${err.message}`)
+    error(`Failed to get installation token: ${(err as Error).message}`)
   }
 }
 
